@@ -48,17 +48,78 @@
 * Можно работать с чатом.
 ## Docker Desktop + WSL2
 ### Прежде чем начать
+Скачайте и установите [Docker Desktop для Windows](https://www.docker.com/products/docker-desktop/).
 #### Способ 1. Локальная сборка
 ##### Установка
+* Скачайте freegpt-webui: `git clone https://github.com/Em1tSan/freegpt-webui-ru`.
+* Откройте папку freegpt-webui-ru: `cd freegpt-webui-ru`.
+* Выполните сборку `docker-compose build`
 ##### Обновление
-#### Способ 2. Готовая сборка
-##### Установка
+* Откройте папку freegpt-webui-ru: `cd freegpt-webui-ru`.
+* Остановите котнейнер, если запущен: `docker-compose down freegpt-neurogen`
+* Скачайте обновления freegpt-webui, выполнив команды: `git reset --hard` и `git pull`
+* Выполните пересборку `docker-compose build`
+* Можно запускать  `docker-compose up -d --force-recreate freegpt-neurogen`
+  * `-d` Параметр выполнит запуск в фоне. Если хотите вывод в консоль терминала - не добавляйте этот аргумент.
+  * `freegpt-neurogen` - заданное имя контейнера в файле `docker-compose.yml`.
+  * `--force-recreate` - принудительно пересоздает контейнер из последних слоев образа. Помогает, если после пересборки контейнера почему-то не хочет обновляться.
 ##### Запуск
+* Выполните `docker-compose up -d --force-recreate freegpt-neurogen`
+  * `-d` Параметр выполнит запуск в фоне. Если хотите вывод в консоль терминала - не добавляйте этот аргумент.
+  * `freegpt-neurogen` - заданное имя контейнера в файле `docker-compose.yml`.
+  * `--force-recreate` - принудительно пересоздает контейнер из последних слоев образа.
+* Откройте страницу в браузере: `http://127.0.0.1:1338/`
+#### Вариант 2. [Сторонний готовый образ](https://github.com/EpicMorg/docker/tree/master/linux/ecosystem/freegpt-webui) и docker-compose к  нему
+* *Подержкой этого решения занимается внешний разработчик и подписчик канала, способ официальным не является.*
+* В данном варианте - ничего собирать и качать из гита не надо. Достаточно заполнить файл манифеста `docker-compose.yml` как надо и будет работать. Поддерживаемые версии: все, в соотвествии со страницей релизов. С версии `1.3` появилась поддержка endpoint-ов. 
+##### Установка
+* В удобном месте создайте файл `docker-compose.yml`
+  * Пример файла `docker-compose.yml`
+    ```yml
+    version: "3.9"
+    services:
+      freegpt-neurogen:
+        image: epicmorg/freegpt-webui:latest
+        container_name: freegpt-neurogen
+        hostname: freegpt-neurogen
+        restart: always
+        ports:
+           - 1337:1337
+           - 1338:1338
+    ```
+  * Версии которые можно указать: `latest`, `1.4`, `1.3.2`, `1.3.1`, `1.3`, `1.2`, `1.1`, `1.0`
+* Находясь рядом с файлом, скачайте образ: `docker-compose pull freegpt-neurogen`
+* Можно запускать.
 ##### Обновление
-## WSL2 Only
+* Откройте папку сождержащую ваш файл `docker-compose.yml`
+* Остановите котнейнер, если запущен: `docker-compose down freegpt-neurogen`
+* Отредактируйте файл `docker-compose.yml` указав версию нового релиза.
+  * В случае, если указан `latest` - то ничего редактировать не надо. Шаг можно пропустить.
+* Скачайте обновления выполнив команду: `docker-compose pull freegpt-neurogen`
+* Можно запускать.
+##### Запуск
+* Выполните `docker-compose up -d --force-recreate freegpt-neurogen`
+  * `-d` Параметр выполнит запуск в фоне. Если хотите вывод в консоль терминала - не добавляйте этот аргумент.
+  * `freegpt-neurogen` - заданное имя контейнера в файле `docker-compose.yml`.
+  * `--force-recreate` - принудительно пересоздает контейнер из последних слоев образа.
+* Откройте страницу в браузере: `http://127.0.0.1:1338/`
+* Начиная с версии 1.3 и выше - параллельно чату вам так же будет доступен и endpoint `http://127.0.0.1:1337/`
+
+В дальнейшем запуск, перезапуск и остановку контейнера можете делать уже через интерфейс Docker Desktop:
+![Screenshot](img/docker-desktop.png)
+## WSL2 с докером внутри, без Docker Desktop
 #### Прежде чем начать
+Обратитесь к [странице с инструкцией](https://learn.microsoft.com/ru-ru/windows/wsl/install) как поставить подсистему WSL2 на вашу версию Windows.
+Примерные шаги такие:
+* Установите WSL2:
+  * `wsl --install`
+* Посмотрите список доступных дистрибутивов
+  * `wsl --list --online`
+* Установите нужный вам, например
+  * `wsl --install -d Ubuntu-22.04`
+* После установки в локальный дистибутив можно будет зайти через коммандную строку или терминал, набрав `bash`.
 #### Установка и обновления
-* Перейдите в раздел Linux
+* Перейдите в раздел Linux - Docker для дальнейших инструкций по установке.
 ## VirtualMachine
 ### Hyper-V
 #### Прежде чем начать
